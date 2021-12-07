@@ -18,3 +18,7 @@ def index():
         return {"code": 200, "msg": "ok", "data": json.loads(ok)}
     else:
         return {"code": 500, "msg": "redis缓存失败"}
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
