@@ -25,12 +25,13 @@ def Token():
     url = "https://bscscan.com/token/0x12bb890508c125661e03b09ec06e404bc9289040"
     response = scraper.get(url)
     cookies = response.cookies
-    sid = re.findall(r"var sid = \'(.+?)\';\r\n", str(response.content, "utf-8"))
+    # 从网页html/js中，用正则匹配替换出 sid
+    sidArr = re.findall(r"var sid = \'(.+?)\';\r\n", str(response.content, "utf-8"))
     # 获取 ASP.NET_SessionId
     session = "ASP.NET_SessionId=" + cookies['ASP.NET_SessionId']
-    yesId = "sid=" + sid[0]
+    sid = "sid=" + sidArr[0]
     # 第一步获取采集数据的门槛，分别拿到sid和session
-    return [session, yesId]
+    return [session, sid]
     # return ['ASP.NET_SessionId=1jmk0z3gjx1gmlk4rymwh2g3', 'sid=020b9b8e05d3e82858a38b0a26dc0612']
 
 
@@ -39,8 +40,8 @@ def getList(p):
     scraper = cfscrape.create_scraper()
     Info = Token()
     print(Info)
-    sid = Info[1]
     session = Info[0]
+    sid = Info[1]
     # 第二步真正获取数据
     listUrl = "https://bscscan.com/token/generic-tokentxns2?m=normal&contractAddress=0x12bb890508c125661e03b09ec06e404bc9289040&a=&" + sid + "&p=" + p
     listRes = scraper.get(
